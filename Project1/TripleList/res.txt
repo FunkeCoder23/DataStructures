@@ -1,0 +1,2 @@
+_____| TripleList ins |   vector ins   |  STL list ins  |   STL set ins  
+Size |      Time      |      Time      |      Time      |      Time      

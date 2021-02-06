@@ -31,7 +31,7 @@ public:
   void restart() { start = clock(); }
   void stop() { finish = clock(); }
   double time() const { return ((double)(finish - start))/CLOCKS_PER_SEC; }
-
+  
 };
 
 #endif

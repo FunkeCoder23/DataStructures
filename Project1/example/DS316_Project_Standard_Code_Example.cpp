@@ -24,14 +24,16 @@
    - I have violated neither the spirit nor letter of these
      restrictions.
 
-   Signed: student name Date: xx/xx/xxxx
+   Signed: Aaron Tobias Date: 02/04/2021
 
 
-   COPYRIGHT (C) 2021 student name. All Rights Reserved.
-   Project #: XXXXXXXXXXXXXXXXXXXXXX
-   author student name, uanetid
-   version 1.01 xxxx-xx-xx
-   Files: xxxxx-xxxx.cxx
+   COPYRIGHT (C) 2021 Aaron Tobias. All Rights Reserved.
+   Project #: 1 - List
+   Author Aaron Tobias, adt27
+   version 1.01 2021-02-04
+   Files:   TripleList.cpp
+            TripleList.hpp
+            Compare.cpp
 
 
    COPYRIGHT (C) 2018 Will Crissey, Jr. All rights reserved.
@@ -68,11 +70,10 @@ Coding modifications included the original work with permission: copyright (c) 1
 #include <limits>
 #include <fstream>
 #include <iterator>
-#include <algorithm>    // std::random_shuffle
+#include <algorithm> // std::random_shuffle
 
 #include "Complexity_Timer.hpp"
 #include "Complexity_Recorder.hpp"
-
 
 // i left this here b/c i was lazy
 using namespace std;
@@ -105,11 +106,14 @@ inline void algorithm(int k, container &x, int BigK, int &recurse)
 {
     switch (k)
     {
-        case 0: stable_sort(x.begin(), x.end());
-            break;
-        case 1: sort(x.begin(), x.end());
-            break;
-        case 2: quickSort(x, 0, x.size(), recurse);
+    case 0:
+        stable_sort(x.begin(), x.end());
+        break;
+    case 1:
+        sort(x.begin(), x.end());
+        break;
+    case 2:
+        quickSort(x, 0, x.size(), recurse);
     }
 }
 
@@ -117,10 +121,10 @@ inline void algorithm(int k, container &x, int BigK, int &recurse)
 // SORT: (the Quicksort algorithm, using the median-of-3 method of choosing pivot elements for partitioning)-from STL
 // Quick sort: Our user written sorting algorithm
 
-const char* headings[number_of_algorithms] =
-{"| stable sort    ",
- "|      sort      ",
- "| my quick sort  "};
+const char *headings[number_of_algorithms] =
+    {"| stable sort    ",
+     "|      sort      ",
+     "| my quick sort  "};
 
 int main()
 {
@@ -128,42 +132,39 @@ int main()
     N1 = 1;    // smallest sequence
     N2 = 1000; // largest sequence
 
-// for our outputting of the results
+    // for our outputting of the results
     ofstream ofs("results.txt");
 
-// this is going to hold the measurements
-    vector<recorder<timer> > stats(number_of_algorithms);
+    // this is going to hold the measurements
+    vector<recorder<timer>> stats(number_of_algorithms);
 
-// The "U" is the type for the vectors x and y (poorly named, i know). Using the largest sequence multiplied by factor to allocate memory
+    // The "U" is the type for the vectors x and y (poorly named, i know). Using the largest sequence multiplied by factor to allocate memory
     vector<U> x, y;
-    x.reserve(N2*factor);
-    y.reserve(N2*factor);
+    x.reserve(N2 * factor);
+    y.reserve(N2 * factor);
 
-
-// The times are taken for short computations by repeating those computations a number of times
-// (controlled by the variable repetitions), so that they take long enough to register nonzero times.
-// In our example where N1 = 1(meaning a sequence of length 1,000 (or, more generally, 1 * factor),
-// then the time will be computed for executing the algorithm 32 times
-   int repetitions = max(32/N1, 1);
+    // The times are taken for short computations by repeating those computations a number of times
+    // (controlled by the variable repetitions), so that they take long enough to register nonzero times.
+    // In our example where N1 = 1(meaning a sequence of length 1,000 (or, more generally, 1 * factor),
+    // then the time will be computed for executing the algorithm 32 times
+    int repetitions = max(32 / N1, 1);
 
     cout << "____";
     for (int i = 0; i < number_of_algorithms; ++i)
-      cout << headings[i];
+        cout << headings[i];
     cout << endl;
 
     cout << "Size";
     for (int i = 0; i < number_of_algorithms; ++i)
-      cout << "|      Time      ";
+        cout << "|      Time      ";
     cout << endl;
-
-
 
     for (N0 = N1; N0 <= N2; N0 *= 2)
     {
 
         N = N0 * factor;
 
-        K = N/2;
+        K = N / 2;
 
         for (int i = 0; i < N; ++i)
             x.push_back(i);
@@ -182,18 +183,18 @@ int main()
             random_shuffle(x.begin(), x.end());
             y = x;
 
-// Notice here we repeat the computation repetitions # of times, not for each one, and we record the total time.
-// (The repetitions factor is divided out when the time is later reported on the output stream.)
+            // Notice here we repeat the computation repetitions # of times, not for each one, and we record the total time.
+            // (The repetitions factor is divided out when the time is later reported on the output stream.)
             for (int i = 0; i < number_of_algorithms; ++i)
             {
-               timer1.restart();
-               for (int k = 0; k < repetitions; ++k)
-               {
-                 x = y;
-                 algorithm(i, x, K, recurse);
-               }
-               timer1.stop();
-               stats[i].record(timer1);
+                timer1.restart();
+                for (int k = 0; k < repetitions; ++k)
+                {
+                    x = y;
+                    algorithm(i, x, K, recurse);
+                }
+                timer1.stop();
+                stats[i].record(timer1);
             }
         } // end of trials loop
 
@@ -211,15 +212,13 @@ int main()
         if (repetitions > 1)
             repetitions /= 2;
 
-// Notice we restore the input sequence before each call of the algorithm; b/c these algorithms typically
-//  would perform differently on already-sorted sequences than on random ones.
-
+        // Notice we restore the input sequence before each call of the algorithm; b/c these algorithms typically
+        //  would perform differently on already-sorted sequences than on random ones.
     }
-// the number of recursions reveals the call stack implications
+    // the number of recursions reveals the call stack implications
     cout << endl;
     cout << "Number of quicksort recursions: " << recurse << endl;
     return 0;
-
 }
 
 // Sorting Benchmarks
@@ -229,8 +228,6 @@ int main()
 //   ...Now for almost any sort I do this for (instrumented sort) the counts
 // are more than they need to be. None reflect their magnitudes and complexities
 
-
-
 // Precondition: as argument need the address of the vector. Also, p is the starting point and r is the size.
 // Postcondition: this function will not return the sorted object and is exclusively used for timing
 
@@ -239,14 +236,13 @@ int main()
 void quickSort(std::vector<int> &input, int p, int r, int &recurse)
 {
     recurse++;
-    if ( p < r )
+    if (p < r)
     {
         int j = partition(input, p, r);
-        quickSort(input, p, j-1, recurse);
-        quickSort(input, j+1, r, recurse);
+        quickSort(input, p, j - 1, recurse);
+        quickSort(input, j + 1, r, recurse);
     }
 }
-
 
 // The partition function
 int partition(std::vector<int> &input, int p, int r)
@@ -254,17 +250,17 @@ int partition(std::vector<int> &input, int p, int r)
 
     int pivot = input[r];
 
-    while ( p < r )
+    while (p < r)
     {
-        while ( input[p] < pivot )
+        while (input[p] < pivot)
             p++;
 
-        while ( input[r] > pivot )
+        while (input[r] > pivot)
             r--;
 
-        if ( input[p] == input[r] )
+        if (input[p] == input[r])
             p++;
-        else if ( p < r )
+        else if (p < r)
         {
             int tmp = input[p];
             input[p] = input[r];
@@ -274,5 +270,3 @@ int partition(std::vector<int> &input, int p, int r)
 
     return r;
 }
-
-

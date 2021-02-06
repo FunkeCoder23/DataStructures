@@ -25,26 +25,39 @@ using std::cout;
 template <class Container>
 typename Container::value_type median(Container &c)
 {
-  typename Container::iterator midpoint = c.begin() + (c.end() - c.begin())/2;
+  typename Container::iterator midpoint = c.begin() + (c.end() - c.begin()) / 2;
   nth_element(c.begin(), midpoint, c.end());
   return *midpoint;
 }
 
 template <class Timer>
-class recorder {
+class recorder
+{
   std::vector<double> times;
 
 public:
-    void record(const Timer& t) {
-      times.push_back(t.time());
+  void record(const Timer &t)
+  {
+    times.push_back(t.time());
   }
-  void report(std::ostream& o, int repeat_factor)
+  void recordms(const Timer &t)
+  {
+    times.push_back(t.timems());
+  }
+  void report(std::ostream &o, int repeat_factor)
   {
     o << std::fixed << std::setprecision(3) << std::setw(12)
-      << median(times)/repeat_factor;
-      o << "     ";
+      << median(times) / repeat_factor;
+    o << "     ";
   }
-  void reset() {
+  void reportms(std::ostream &o, int repeat_factor)
+  {
+    o << std::fixed << std::setprecision(3) << std::setw(12)
+      << median(times) / repeat_factor << 'ms';
+    o << "   ";
+  }
+  void reset()
+  {
     times.erase(times.begin(), times.end());
   }
 };

@@ -15,7 +15,7 @@ To use it for other algorithms, the parameters in the template function (Contain
 #include <vector>
 #include <fstream>
 #include <iterator>
-#include <algorithm>    // std::random_shuffle
+#include <algorithm> // std::random_shuffle
 #include "Complexity_Timer.hpp"
 #include "Complexity_Recorder.hpp"
 #include <vector>
@@ -37,17 +37,16 @@ const int number_of_structures = 3;
 const int number_of_trials = 7;
 
 // FACTOR is &&&&&
-const int FACTOR = 100;  // <==== this will influence the N (size of the problem)
-
+const int FACTOR = 100; // <==== this will influence the N (size of the problem)
 
 // user written linked list (above) - LL - insert and delete node by node
 // stl list - the list from the STL
 // stl vector  - the vector from the STL
 
-const char* headings[number_of_structures] =
-{"| user list del ",
- "| vector erase   ",
- "| STL list erase "};
+const char *headings[number_of_structures] =
+    {"| user list del ",
+     "| vector erase   ",
+     "| STL list erase "};
 
 // The simple linked list structure with options for the experiment
 // Very limited - your code would be bigger and way better
@@ -59,16 +58,18 @@ private:
    // Declare a structure for the list
    struct ListNode
    {
-      int value;           // The value in this node
-      struct ListNode *next;  // To point to the next node
+      int value;             // The value in this node
+      struct ListNode *next; // To point to the next node
    };
 
-   ListNode *head;            // List head pointer
+   ListNode *head; // List head pointer
 
 public:
    // Constructor
    LL()
-      { head = nullptr; }
+   {
+      head = nullptr;
+   }
 
    // Destructor
    ~LL();
@@ -78,139 +79,135 @@ public:
    void deleteNode(int);
 };
 
-
 int main()
 {
-  int N0, N1, N2, N, K;
-  N1 = 1;    // smallest sequence
-  N2 = 1000;  // largest sequence
+   int N0, N1, N2, N, K;
+   N1 = 1;    // smallest sequence
+   N2 = 1000; // largest sequence
 
-  // for our outputting of the results
-  ofstream ofs("results.txt");
+   // for our outputting of the results
+   ofstream ofs("results.txt");
 
-  // this is going to hold the measurements
-  vector<recorder<timer> > stats(number_of_structures);
+   // this is going to hold the measurements
+   vector<recorder<timer>> stats(number_of_structures);
 
-  // The "U" is the type for the vectors x and y, STD lists with better names
-  // Using the largest sequence multiplied by factor to allocate memory
-  // load everything
-  // STL lists
-  vector<U> x, y;
-  list<U> mySTList, otSTList;
-  // our list
-  LL myList;
+   // The "U" is the type for the vectors x and y, STD lists with better names
+   // Using the largest sequence multiplied by factor to allocate memory
+   // load everything
+   // STL lists
+   vector<U> x, y;
+   list<U> mySTList, otSTList;
+   // our list
+   LL myList;
 
-  // The times are taken for short computations by repeating those computations a number of times
-  // (controlled by the variable repetitions), so that they take long enough to register nonzero times.
-  // In our example where N1 = 1(meaning a sequence of length 1,000 (or, more generally, 1 * factor),
-  // then the time will be computed for executing the algorithm 32 times
-  int repetitions = max(32/N1, 1);
+   // The times are taken for short computations by repeating those computations a number of times
+   // (controlled by the variable repetitions), so that they take long enough to register nonzero times.
+   // In our example where N1 = 1(meaning a sequence of length 1,000 (or, more generally, 1 * factor),
+   // then the time will be computed for executing the algorithm 32 times
+   int repetitions = max(32 / N1, 1);
 
-  cout << "____";
-  for (int i = 0; i < number_of_structures; ++i)
-    cout << headings[i];
-  cout << endl;
+   std::cout << "____";
+   for (int i = 0; i < number_of_structures; ++i)
+      std::cout << headings[i];
+   std::cout << std::endl;
 
-  cout << "Size";
-  for (int i = 0; i < number_of_structures; ++i)
-    cout << "|      Time     ";
-  cout << endl;
+   std::cout << "Size";
+   for (int i = 0; i < number_of_structures; ++i)
+      std::cout << "|      Time     ";
+   std::cout << std::endl;
 
-
-  for (N0 = N1; N0 <= N2; N0 *= 2)
-  {
+   for (N0 = N1; N0 <= N2; N0 *= 2)
+   {
 
       N = N0 * FACTOR;
 
-      K = N/2;
+      K = N / 2;
 
       // load them up
       for (int i = 0; i < N; ++i)
-          x.push_back(i);
+         x.push_back(i);
 
       for (int i = 0; i < N; ++i)
       {
-        mySTList.push_back(i);
+         mySTList.push_back(i);
       }
       for (int i = 0; i < N; ++i)
       {
-        myList.appendNode(i);
+         myList.appendNode(i);
       }
-      cout << setw(4) << N0 << flush;
+      std::cout << setw(4) << N0 << flush;
       ofs << setw(4) << N0;
 
       int k = 0;
 
       for (int i = 0; i < number_of_structures; ++i)
-          stats[i].reset();
+         stats[i].reset();
 
       for (int j = 0; j < number_of_trials; ++j)
       {
 
-  // Notice here we repeat the computation repetitions # of times, not for each one, and we record the total time.
-  // (The repetitions FACTOR is divided out when the time is later reported on the output stream.)
-          for (int i = 0; i < number_of_structures; ++i)
-          {
-             timer1.restart();
-             for (k = 0; k < repetitions; ++k)
-             {
+         // Notice here we repeat the computation repetitions # of times, not for each one, and we record the total time.
+         // (The repetitions FACTOR is divided out when the time is later reported on the output stream.)
+         for (int i = 0; i < number_of_structures; ++i)
+         {
+            timer1.restart();
+            for (k = 0; k < repetitions; ++k)
+            {
                x = y;
                if (i == 0)
                {
-                 for (int n = 0; n < N; ++n)
+                  for (int n = 0; n < N; ++n)
                   {
-                    myList.deleteNode(n);
+                     myList.deleteNode(n);
                   }
                }
                else if (i == 2)
                {
-                 x.erase(x.begin(), x.end());
+                  x.erase(x.begin(), x.end());
                }
                else
                {
-                 mySTList.erase(mySTList.begin(), mySTList.end());
+                  mySTList.erase(mySTList.begin(), mySTList.end());
                }
-             }
-             timer1.stop();
-             stats[i].record(timer1);
-             //
-             // Notice here we restore because the operation we are testing removes everything
-             // To test more operation (like a search), we would like to comment this section
-             // ------------------------------------------------------------------------------
-             if (i == 0)
-               y = x;  // poorly named vectors
-             else if (i == 1)
-               otSTList = mySTList;  // lists
-             else
-             {
+            }
+            timer1.stop();
+            stats[i].record(timer1);
+            //
+            // Notice here we restore because the operation we are testing removes everything
+            // To test more operation (like a search), we would like to comment this section
+            // ------------------------------------------------------------------------------
+            if (i == 0)
+               y = x; // poorly named vectors
+            else if (i == 1)
+               otSTList = mySTList; // lists
+            else
+            {
                // our LL
                for (int z = 0; z < N; ++z)
                {
-                 myList.appendNode(z);
+                  myList.appendNode(z);
                }
-             }
-             // ------------------------------------------------------------------------------
-
-          }
+            }
+            // ------------------------------------------------------------------------------
+         }
       } // end of trials loop
 
       for (int i = 0; i < number_of_structures; ++i)
       {
-          stats[i].report(cout, repetitions);
-          stats[i].report(ofs, repetitions);
+         stats[i].report(std::cout, repetitions);
+         stats[i].report(ofs, repetitions);
       }
 
-      cout << endl;
-      ofs << endl;
+      std::cout << std::endl;
+      ofs << std::endl;
 
       x.erase(x.begin(), x.end());
 
       if (repetitions > 1)
-          repetitions /= 2;
-  }
+         repetitions /= 2;
+   }
 
-  return 0;
-
+   return 0;
 }
 
 //**************************************************
@@ -221,8 +218,8 @@ int main()
 // here is the user written code for the Linked List (scaled down)
 void LL::appendNode(int intVar)
 {
-   ListNode *newNode;  // To point to a new node
-   ListNode *nodePtr;  // To move through the list
+   ListNode *newNode; // To point to a new node
+   ListNode *nodePtr; // To move through the list
 
    // Allocate a new node and store num there.
    newNode = new ListNode;
@@ -233,7 +230,7 @@ void LL::appendNode(int intVar)
    // make newNode the first node.
    if (!head)
       head = newNode;
-   else  // Otherwise, insert newNode at end.
+   else // Otherwise, insert newNode at end.
    {
       // Initialize nodePtr to head of list.
       nodePtr = head;
@@ -249,8 +246,8 @@ void LL::appendNode(int intVar)
 
 void LL::deleteNode(int intVar)
 {
-   ListNode *nodePtr;       // To traverse the list
-   ListNode *previousNode;  // To point to the previous node
+   ListNode *nodePtr;      // To traverse the list
+   ListNode *previousNode; // To point to the previous node
 
    // If the list is empty, do nothing.
    if (!head)
@@ -296,8 +293,8 @@ void LL::deleteNode(int intVar)
 
 LL::~LL()
 {
-   ListNode *nodePtr;   // To traverse the list
-   ListNode *nextNode;  // To point to the next node
+   ListNode *nodePtr;  // To traverse the list
+   ListNode *nextNode; // To point to the next node
 
    // Position nodePtr at the head of the list.
    nodePtr = head;
